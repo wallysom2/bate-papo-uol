@@ -123,7 +123,7 @@ app.post("messages", async (req, res) => {
 
 app.get("messages", async (req, res) => {
   const user = req.headers.user
-  const limite = parseInt(req.query.limit)
+  const limit = parseInt(req.query.limit)
   let arrMensagens = []
   try {
     const messages = await db.collection("messages").find().toArray()
@@ -184,54 +184,6 @@ app.post ("/status", async (req, res) => {
     } catch (e) { }
 
   })
-
-  app.put("/messages/:id", async (req, res) => {
-    const { to, type, text } = req.body
-    const user = req.headers.user
-    const { id } = req.params
-
-    const schemaMessage = joi.object({
-      to: joi.string().required(),
-      text: joi.string().required(),
-      type: joi.string().allow('message', 'private_message'),
-    })
-    const validateMessage = schemaMessage.validate({ to, type, text }, { abortEarly: false });
-    if (validateMessage.error) {
-      res.sendStatus(422);
-      return;
-    }
-    try {
-      const findUser = await db.collection("participants").findOne({ name: user })
-      if (!findUser) {
-        res.sendStatus(422);
-        return;
-      }
-      const messageId = await db.collection("messages").findOne({ _id: new ObjectId(id) })
-      if (user !== messageId.from) {
-        res.sendStatus(401);
-        return;
-      }
-      if (!messageId) {
-        res.sendStatus(404)
-        return;
-      }
-      await db.collection("messages").updateOne(
-        { _id: messageId._id, },
-        {
-          $set: {
-            from,
-            to,
-            type,
-            text,
-            time: dayjs().format("HH:mm:ss")
-          }
-        }
-      )
-
-    } catch (e) { console.log(e) }
-  })
-})
-
 
 
 app.listen(5000, () => {
