@@ -96,7 +96,7 @@ app.post("messages", async (req, res) => {
   if (!validateMessage) {
      res.send(422);
   } else {
-    res.sendStatus(422).send("xabu", error)
+    res.sendStatus(422).send("nao foi possivel concluir solicitacao", error)
   }
 
   try {
