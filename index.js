@@ -165,7 +165,7 @@ app.post ("/status", async (req, res) => {
     res.send(422).send("nao foi possivel concluir solicitacao", e);
     mongoClient.close();
   }
-
+})
 
   app.delete("/messages/:id", async (req, res) => {
     const user = req.headers.user
@@ -184,7 +184,6 @@ app.post ("/status", async (req, res) => {
     } catch (e) { }
 
   })
-
 
 app.listen(5000, () => {
   console.log("rodando na porta 5000")
